@@ -29,7 +29,7 @@ const RenderMdx = ({blog}) => {
 
     first-letter:text-3xl
     sm:first-letter:text-5xl'> 
-        <MDXContent code={blog.body} components={mdxComponents}/>
+        <MDXContent slug={blog.slug} components={mdxComponents}/>
     </div>
   )
 }

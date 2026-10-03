@@ -3,7 +3,12 @@ import React, { useEffect, useState } from "react";
 import { createClient } from '@supabase/supabase-js'
 
 
-const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+const getSupabase = () => {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (!url || !key) return null;
+  return createClient(url, key);
+};
 
 const ViewCounter = ({ slug, noCount = false, showCount = true }) => {
   const [views, setViews] = useState(0);
@@ -11,6 +16,8 @@ const ViewCounter = ({ slug, noCount = false, showCount = true }) => {
   useEffect(() => {
     const incrementView = async () => {
       try {
+        const supabase = getSupabase();
+        if (!supabase) return;
         let { error } = await supabase.rpc("increment", {
           slug_text:slug ,
         });
@@ -35,6 +42,8 @@ const ViewCounter = ({ slug, noCount = false, showCount = true }) => {
   useEffect(() => {
     const getViews = async () => {
       try {
+        const supabase = getSupabase();
+        if (!supabase) return;
         let { data, error } = await supabase
   .from('views')
   .select('count')
